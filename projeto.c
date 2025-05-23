@@ -1,10 +1,10 @@
 
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h> //qsort para arrays
 #include <string.h>
 #include <ctype.h>
 
-
+//aqui eu defini todas as structs do projeto que foram apresentadas nas orientações do projeto
 typedef struct {
     int dia;
     int mes;
@@ -41,6 +41,11 @@ typedef struct {
     char descricao[300];
 } td_compromisso;
 
+// aqui eu apresentei os prototipos das funcoes
+// sao responsaveis por gerenciar a memoria para vetores
+// essas funcoes sao para alocar memoria inicial para um vetor de cada tipo
+// os parametros *dimensao sao ponteiros para um int que sera usado para informar a dimensao incial do vetor alocado
+//mesmo para *vetor
 
 td_aluno* aloca_vetor_alunos(int *dimensao);
 td_aluno* realoca_vetor_alunos(td_aluno *vetor, int *dimensao);
@@ -51,6 +56,8 @@ td_matricula* realoca_vetor_matriculas(td_matricula *vetor, int *dimensao);
 td_compromisso* aloca_vetor_compromissos(int *dimensao);
 td_compromisso* realoca_vetor_compromissos(td_compromisso *vetor, int *dimensao);
 
+//prototipo das minhas funcoes void e int 
+// parametros vetor e posicao para eu indicar a posicao especifica dentro do vetor
 void cadastra_aluno(td_aluno vetor[], int posicao);
 void cadastra_disciplina(td_disciplina vetor[], int posicao);
 void cadastra_matricula(td_matricula vetor[], int posicao, td_aluno alunos[], int tam_alunos, td_disciplina disciplinas[], int tam_disciplinas);
@@ -67,9 +74,10 @@ int verifica_email(char email[]);
 void le_horario(td_hora *hora);
 void le_data(td_data *data);
 
-int compara_alunos_ra(const void *a, const void *b);
-int compara_compromissos_data_hora(const void *a, const void *b);
-int compara_compromissos_ra_data_hora(const void *a, const void *b);
+//funcoes qsort como apresentadas na aba "Exemplos para auxiliar no projeto"
+int compara_alunos_ra(const void *a, const void *b); //essa funcao sera responsavel por comparar dois objetos do tipo td_aluno
+int compara_compromissos_data_hora(const void *a, const void *b); //compara primariamente por sua data em caso de datas iguais e depois por sua hora
+int compara_compromissos_ra_data_hora(const void *a, const void *b); 
 int compara_compromissos_hora_ra(const void *a, const void *b);
 int compara_compromissos_data_hora_ra(const void *a, const void *b);
 
@@ -80,35 +88,45 @@ void relatorio_compromissos_todas_datas(td_compromisso vetor[], int dimensao);
 void relatorio_dados_aluno(td_aluno vetor[], int dimensao, td_matricula matriculas[], int tam_matriculas, td_disciplina disciplinas[], int tam_disciplinas);
 void relatorio_dados_todos_alunos(td_aluno vetor[], int dimensao);
 
+//agora eu venho para a minha main
 int main() {
     
+    //inicializando minhas variaveis
+    //as com comecam com dim represetam a capacidade maxima das minhas variaveis
+    //as que comecam com qnt representam o valor inicial delas
     int dim_alunos = 10, dim_disciplinas = 10, dim_matriculas = 20, dim_compromissos = 15;
     int qtd_alunos = 0, qtd_disciplinas = 0, qtd_matriculas = 0, qtd_compromissos = 0;
+    int opcao;
     
-    
+    // aqui é a alocação dinâmica de memória para armazenar dados relacionados a alunos, disciplinas, matrículas e compromissos
+    // ex: td_aluno *alunos declara um ponteiro chamado alunos que será capaz de apontar para um objeto do tipo td_aluno
+    // depois chama a funcao aloca_vetor_alunos e passas o endereco de memoria dim_alunos para a funcao (que pode ler o valor inicia de dim_alunos)
+    // ele sabe quantos elementos alocar e modificar depois
     td_aluno *alunos = aloca_vetor_alunos(&dim_alunos);
     td_disciplina *disciplinas = aloca_vetor_disciplinas(&dim_disciplinas);
     td_matricula *matriculas = aloca_vetor_matriculas(&dim_matriculas);
     td_compromisso *compromissos = aloca_vetor_compromissos(&dim_compromissos);
     
-    int opcao;
+    //aqui eu comeco desenvolver o meu menu
     do {
         printf("\nMENU PRINCIPAL\n");
         printf("1 - Cadastrar aluno\n");
         printf("2 - Cadastrar disciplina\n");
         printf("3 - Cadastrar matricula\n");
         printf("4 - Cadastrar compromisso\n");
-        printf("5 - Imprimir compromissos\n");
-        printf("6 - Imprimir dados de um aluno\n");
-        printf("7 - Imprimir dados de todos os alunos\n");
+        printf("5 - Mostrar compromissos\n");
+        printf("6 - Mostrar dados de um aluno\n");
+        printf("7 - Mostrar dados de todos os alunos\n");
         printf("8 - Sair\n");
         printf("Opcao: ");
         scanf("%d", &opcao);
         
+        //faço um switch case de acordo com as opcoes digitadas no menu
+        //esse swithc case é responsavel por verificar a quantidade de objetos alocados em uma determinada opcao
         switch(opcao) {
-            case 1:
+            case 1: 
                 if (qtd_alunos == dim_alunos) {
-                    alunos = realoca_vetor_alunos(alunos, &dim_alunos);
+                    alunos = realoca_vetor_alunos(alunos, &dim_alunos); //vai verificar se a quantidade de alunos é igual a dim alunos, se for ele chama a funcao para realocar o vetor
                 }
                 cadastra_aluno(alunos, qtd_alunos);
                 qtd_alunos++;
@@ -289,6 +307,8 @@ scanf("%s", vetor[posicao].disciplina);
 printf("Disciplina Cadastrada");
 
 }
+
+void cadastra_matricula(td_matricula vetor[])
 
 
 
